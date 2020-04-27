@@ -98,24 +98,26 @@ function login(req, res) {
     var email = params.email;
     var password = params.password;
 
-    User.findOne({ email: email.toLowerCase() }, (err, issetUser) => {
+    User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
             res.status(500).send({
                 message: 'Error al comprobar usuario'
             });
         } else {
-            if (issetUser) {
-                bcrypt.compare(password, issetUser.password, (err, check) => {
+            if (user) {
+                bcrypt.compare(password, user.password, (err, check) => {
                     if (check) {
 
                         if (params.gettoken) {
                             res.status(200).send({
-                                token: jwt.createToken(issetUser)
+                                token: jwt.createToken(user)
+                            });
+                        } else {
+
+                            res.status(200).send({
+                                user
                             });
                         }
-                        res.status(200).send({
-                            issetUser
-                        });
 
                     } else {
                         res.status(404).send({
@@ -134,8 +136,44 @@ function login(req, res) {
 
 
 
+/***********************************************************************
+ACTUALIZAR UN USUARIO
+************************************************************************/
+function updateUser(req, res) {
+
+    var userId = req.params.id;
+    var update = req.body;
+
+    if (userId != req.user.sub) {
+        return res.status(500).send({
+            message: 'No tienes permisos para actualizar el usuario'
+        });
+    }
+
+    User.findByIdAndUpdate(userId, update, { new: true }, (err, userUpdated) => {
+        if (err) {
+            res.status(500).send({
+                message: 'Error al actualizar el usuario'
+            });
+        } else {
+            if (!userUpdated) {
+                res.status(404).send({
+                    message: 'El usuario no existe'
+                });
+            } else {
+                res.status(200).send({
+                    user: userUpdated
+                });
+            }
+        }
+    });
+};
+
+
+
 module.exports = {
     pruebas,
     saveUser,
-    login
+    login,
+    updateUser
 };
