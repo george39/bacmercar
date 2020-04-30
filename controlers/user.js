@@ -171,9 +171,75 @@ function updateUser(req, res) {
 
 
 
+/***********************************************************************
+LISTAR TODOS LOS USUARIOS
+************************************************************************/
+function getUser(req, res) {
+
+
+    User.find({ role: 'ADMIN_ROLE' }).exec((err, users) => {
+        if (err) {
+
+            res.status(500).send({
+                message: 'Error en la peticion'
+            });
+        } else {
+            if (!users) {
+                res.status(404).send({
+                    message: 'El usuario no existe'
+                });
+            } else {
+                res.status(200).send({
+                    users
+                });
+            }
+        }
+
+    });
+}
+
+
+
+/***********************************************************************
+ELIMINAR UN USUARIO
+************************************************************************/
+function deleteUser(req, res) {
+
+    var userId = req.params.id;
+
+
+    // if (userId != req.user.sub) {
+    //     return res.status(500).send({
+    //         message: 'No tienes permisos para eliminar el usuario'
+    //     });
+    // }
+
+    User.findByIdAndDelete(userId, (err, userDeleted) => {
+        if (err) {
+            res.status(500).send({
+                message: 'Error al eliminar el usuario'
+            });
+        } else {
+            if (!userDeleted) {
+                res.status(404).send({
+                    message: 'El usuario no existe'
+                });
+            } else {
+                res.status(200).send({
+                    user: userDeleted
+                });
+            }
+        }
+    });
+};
+
+
+
 module.exports = {
     pruebas,
     saveUser,
     login,
-    updateUser
+    updateUser,
+    getUser,
+    deleteUser
 };
