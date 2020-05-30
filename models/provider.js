@@ -6,7 +6,8 @@ var Schema = mongoose.Schema;
 
 var ProviderSchema = new Schema({
     nameProvider: { type: String, required: [true, 'El nombre es obligatorio'] },
-    nameCompany: { type: String, required: [true, 'El nombre de la empresa es obligatorio'] }
+    nameCompany: { type: String, required: [true, 'El nombre de la empresa es obligatorio'] },
+    phone: { type: String, required: [true, 'El telefono es obligatorio'] }
 });
 
 

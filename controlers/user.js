@@ -35,6 +35,7 @@ function saveUser(req, res) {
         user.surname = params.surname;
         user.address = params.address;
         user.email = params.email;
+        user.phone = params.phone;
 
 
         User.findOne({ email: user.email.toLowerCase() }, (err, issetUser) => {
@@ -143,6 +144,7 @@ function updateUser(req, res) {
 
     var userId = req.params.id;
     var update = req.body;
+    delete update.password;
 
     if (userId != req.user.sub) {
         return res.status(500).send({

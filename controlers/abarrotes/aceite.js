@@ -2,85 +2,47 @@
 
 var bcrypt = require('bcrypt-nodejs');
 
-var Product = require('../models/product');
-var Arroz = require('../models/abarrotes/arroz');
 
-var jwt = require('../services/jwt');
+var Aceite = require('../../models/abarrotes/aceite');
+
+var jwt = require('../../services/jwt');
 var fs = require('fs');
 var path = require('path');
 
 
-/***********************************************************************
-CREAR UN PRODUCTO
-************************************************************************/
-function saveProduct(req, res) {
 
-    var product = new Product()
+/***********************************************************************
+CREAR UN ACEITE
+************************************************************************/
+function saveAceite(req, res) {
+
+    var aceite = new Aceite()
     var params = req.body;
 
     if (params.name) {
-        product.providerId = params.providerId;
-        product.name = params.name;
-        product.code = params.code;
-        product.quantity = params.quantity;
-        product.priceHigher = params.priceHigher;
-        product.priceClient = params.priceClient;
-        product.image = params.image;
+        aceite.providerId = params.providerId;
+        aceite.name = params.name;
+        aceite.code = params.code;
+        aceite.quantity = params.quantity;
+        aceite.priceHigher = params.priceHigher;
+        aceite.priceClient = params.priceClient;
+        aceite.image = params.image;
 
 
 
-        product.save((err, productSave) => {
+        aceite.save((err, aceiteSave) => {
             if (err) {
                 res.status(500).send({
-                    message: 'Error al crear producto'
+                    message: 'Error al crear aceite'
                 });
             } else {
-                if (!productSave) {
+                if (!aceiteSave) {
                     res.status(404).send({
-                        message: 'No se ha podido crear producto'
+                        message: 'No se ha podido crear aceite'
                     });
                 } else {
                     res.status(200).send({
-                        product: productSave
-                    });
-                }
-            }
-        });
-    }
-
-}
-
-
-/***********************************************************************
-CREAR UN ARROZ
-************************************************************************/
-function saveArroz(req, res) {
-
-    var arroz = new Arroz()
-    var params = req.body;
-
-    if (params.name) {
-        arroz.providerId = params.providerId;
-        arroz.name = params.name;
-        arroz.priceHigher = params.priceHigher;
-        arroz.priceClient = params.priceClient;
-        arroz.image = params.image;
-
-
-
-        arroz.save((err, arrozSave) => {
-            if (err) {
-                res.status(500).send({
-                    message: 'Error al crear aroz'
-                });
-            } else {
-                if (!arrozSave) {
-                    res.status(404).send({
-                        message: 'No se ha podido crear aroz'
-                    });
-                } else {
-                    res.status(200).send({
-                        arroz: arrozSave
+                        aceite: aceiteSave
                     });
                 }
             }
@@ -92,27 +54,27 @@ function saveArroz(req, res) {
 
 
 /***********************************************************************
-ACTUALIZAR UN PRODUCTO
+ACTUALIZAR UN ACEITE
 ************************************************************************/
-function updateProduct(req, res) {
+function updateAceite(req, res) {
 
-    var productId = req.params.id;
+    var aceiteId = req.params.id;
     var update = req.body;
 
-    Product.findByIdAndUpdate(productId, update, { new: true }, (err, productUpdate) => {
+    Aceite.findByIdAndUpdate(aceiteId, update, { new: true }, (err, aceiteUpdate) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al actualizar productos'
+                message: 'Error al actualizar aceite'
             });
         } else {
-            if (!productUpdate) {
+            if (!aceiteUpdate) {
                 res.status(404).send({
-                    message: 'El producto con ese id no existe'
+                    message: 'El aceite con ese id no existe'
                 });
             } else {
                 res.status(200).send({
-                    product: productUpdate
+                    aceite: aceiteUpdate
                 });
             }
         }
@@ -121,24 +83,24 @@ function updateProduct(req, res) {
 
 
 /***********************************************************************
-LISTAT TODOS LOS PORODUCTOS
+LISTAT TODOS LOS ACEITE
 ************************************************************************/
-function getProduct(req, res) {
+function getAceite(req, res) {
 
-    Product.find((err, product) => {
+    Aceite.find((err, aceite) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al cargar productos'
+                message: 'Error al cargar aceiteo'
             });
         } else {
-            if (!product) {
+            if (!aceite) {
                 res.status(404).send({
-                    message: 'No existen productos'
+                    message: 'No existen aceiteo'
                 });
             } else {
                 res.status(200).send({
-                    product
+                    aceite
                 });
 
             }
@@ -148,26 +110,26 @@ function getProduct(req, res) {
 
 
 /************************************************************
- LISTAR UN PRODUCTO ESPECIFICO
+ LISTAR UN ACEITE ESPECIFICO
 *************************************************************/
-function getProductUnic(req, res) {
+function getAceiteUnic(req, res) {
 
-    let productId = req.params.id;
+    let aceiteId = req.params.id;
 
-    Product.findById(productId).populate({ path: 'product_id' }).exec((err, product) => {
+    Aceite.findById(aceiteId).populate({ path: 'aceite_id' }).exec((err, aceite) => {
 
         if (err) {
             return res.status(500).json({
-                message: 'Error al obtener proveedor'
+                message: 'Error al obtener aceite'
             });
         } else {
-            if (!product) {
+            if (!aceite) {
                 return res.status(404).json({
-                    message: 'El proveedor no existe'
+                    message: 'El aceite no existe'
                 });
             } else {
                 return res.status(200).json({
-                    product
+                    aceite
                 });
             }
         }
@@ -177,28 +139,28 @@ function getProductUnic(req, res) {
 
 
 /***********************************************************************
-ELIMINAR UN PRODUCTO
+ELIMINAR UN ACEITE
 ************************************************************************/
-function deleteProduct(req, res) {
+function deleteAceite(req, res) {
 
-    var productId = req.params.id;
+    var aceiteId = req.params.id;
 
 
-    Product.findByIdAndRemove(productId, (err, productDeleted) => {
+    Aceite.findByIdAndRemove(aceiteId, (err, aceiteDeleted) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al eliminar productos'
+                message: 'Error al eliminar aceite'
             });
         } else {
-            if (!productDeleted) {
+            if (!aceiteDeleted) {
                 res.status(404).send({
-                    message: 'No se ha podido borrar el producto'
+                    message: 'No se ha podido borrar el aceite'
                 });
             } else {
 
                 res.status(200).send({
-                    product: productDeleted
+                    aceite: aceiteDeleted
                 });
             }
 
@@ -209,10 +171,10 @@ function deleteProduct(req, res) {
 
 
 /***********************************************************************
-CARGAR IMAGENES
+CARGAR ACEITE
 ************************************************************************/
 function uploadImage(req, res) {
-    var productId = req.params.id;
+    var aceiteId = req.params.id;
     var file_name = 'No subido';
 
     if (req.files) {
@@ -226,19 +188,19 @@ function uploadImage(req, res) {
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
 
 
-            Product.findByIdAndUpdate(productId, { image: file_name }, { new: true }, (err, productUpdate) => {
+            Aceite.findByIdAndUpdate(aceiteId, { image: file_name }, { new: true }, (err, aceiteUpdate) => {
                 if (err) {
                     res.status(500).send({
                         message: 'Error al subir imagen'
                     });
                 } else {
-                    if (!productUpdate) {
+                    if (!aceiteUpdate) {
                         res.status(404).send({
                             message: 'No se ha podido subir la imagen'
                         });
                     } else {
                         res.status(200).send({
-                            product: productUpdate,
+                            aceite: aceiteUpdate,
                             image: file_name
                         });
                     }
@@ -268,7 +230,7 @@ function uploadImage(req, res) {
 
 function getImageFile(req, res) {
     var imageFile = req.params.imageFile;
-    var path_file = './uploads/product/' + imageFile;
+    var path_file = './uploads/aceite/' + imageFile;
 
     fs.exists(path_file, function(exists) {
         if (exists) {
@@ -284,13 +246,12 @@ function getImageFile(req, res) {
 
 
 module.exports = {
-    saveProduct,
-    updateProduct,
-    getProduct,
-    deleteProduct,
+    saveAceite,
+    updateAceite,
+    getAceite,
+    deleteAceite,
     uploadImage,
     getImageFile,
-    getProductUnic,
-    saveArroz
+    getAceiteUnic,
 
 };

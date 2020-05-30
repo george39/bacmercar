@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var ProductSchema = Schema({
+var ArrozSchema = Schema({
     providerId: { type: String }, //{ type: Schema.Types.ObjectId, ref: 'Provider' },
     name: { type: String, required: [true, 'El nombre es necesario'] },
     code: { type: String, required: [true, 'El codigo es necesario'] },
@@ -16,4 +16,4 @@ var ProductSchema = Schema({
 
 
 
-module.exports = mongoose.model('Product', ProductSchema);
+module.exports = mongoose.model('Arroz', ArrozSchema);

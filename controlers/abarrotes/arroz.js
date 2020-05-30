@@ -2,53 +2,13 @@
 
 var bcrypt = require('bcrypt-nodejs');
 
-var Product = require('../models/product');
-var Arroz = require('../models/abarrotes/arroz');
 
-var jwt = require('../services/jwt');
+var Arroz = require('../../models/abarrotes/arroz');
+
+var jwt = require('../../services/jwt');
 var fs = require('fs');
 var path = require('path');
 
-
-/***********************************************************************
-CREAR UN PRODUCTO
-************************************************************************/
-function saveProduct(req, res) {
-
-    var product = new Product()
-    var params = req.body;
-
-    if (params.name) {
-        product.providerId = params.providerId;
-        product.name = params.name;
-        product.code = params.code;
-        product.quantity = params.quantity;
-        product.priceHigher = params.priceHigher;
-        product.priceClient = params.priceClient;
-        product.image = params.image;
-
-
-
-        product.save((err, productSave) => {
-            if (err) {
-                res.status(500).send({
-                    message: 'Error al crear producto'
-                });
-            } else {
-                if (!productSave) {
-                    res.status(404).send({
-                        message: 'No se ha podido crear producto'
-                    });
-                } else {
-                    res.status(200).send({
-                        product: productSave
-                    });
-                }
-            }
-        });
-    }
-
-}
 
 
 /***********************************************************************
@@ -62,6 +22,8 @@ function saveArroz(req, res) {
     if (params.name) {
         arroz.providerId = params.providerId;
         arroz.name = params.name;
+        arroz.code = params.code;
+        arroz.quantity = params.quantity;
         arroz.priceHigher = params.priceHigher;
         arroz.priceClient = params.priceClient;
         arroz.image = params.image;
@@ -71,12 +33,12 @@ function saveArroz(req, res) {
         arroz.save((err, arrozSave) => {
             if (err) {
                 res.status(500).send({
-                    message: 'Error al crear aroz'
+                    message: 'Error al crear arroz'
                 });
             } else {
                 if (!arrozSave) {
                     res.status(404).send({
-                        message: 'No se ha podido crear aroz'
+                        message: 'No se ha podido crear arroz'
                     });
                 } else {
                     res.status(200).send({
@@ -92,27 +54,27 @@ function saveArroz(req, res) {
 
 
 /***********************************************************************
-ACTUALIZAR UN PRODUCTO
+ACTUALIZAR UN ARROZ
 ************************************************************************/
-function updateProduct(req, res) {
+function updateArroz(req, res) {
 
-    var productId = req.params.id;
+    var arrozId = req.params.id;
     var update = req.body;
 
-    Product.findByIdAndUpdate(productId, update, { new: true }, (err, productUpdate) => {
+    Arroz.findByIdAndUpdate(arrozId, update, { new: true }, (err, arrozUpdate) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al actualizar productos'
+                message: 'Error al actualizar arrozo'
             });
         } else {
-            if (!productUpdate) {
+            if (!arrozUpdate) {
                 res.status(404).send({
-                    message: 'El producto con ese id no existe'
+                    message: 'El arroz con ese id no existe'
                 });
             } else {
                 res.status(200).send({
-                    product: productUpdate
+                    arroz: arrozUpdate
                 });
             }
         }
@@ -121,24 +83,24 @@ function updateProduct(req, res) {
 
 
 /***********************************************************************
-LISTAT TODOS LOS PORODUCTOS
+LISTAT TODOS LOS ARROCES
 ************************************************************************/
-function getProduct(req, res) {
+function getArroz(req, res) {
 
-    Product.find((err, product) => {
+    Arroz.find((err, arroz) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al cargar productos'
+                message: 'Error al cargar arrozo'
             });
         } else {
-            if (!product) {
+            if (!arroz) {
                 res.status(404).send({
-                    message: 'No existen productos'
+                    message: 'No existen arrozo'
                 });
             } else {
                 res.status(200).send({
-                    product
+                    arroz
                 });
 
             }
@@ -148,26 +110,26 @@ function getProduct(req, res) {
 
 
 /************************************************************
- LISTAR UN PRODUCTO ESPECIFICO
+ LISTAR UN ARROZ ESPECIFICO
 *************************************************************/
-function getProductUnic(req, res) {
+function getArrozUnic(req, res) {
 
-    let productId = req.params.id;
+    let arrozId = req.params.id;
 
-    Product.findById(productId).populate({ path: 'product_id' }).exec((err, product) => {
+    Arroz.findById(arrozId).populate({ path: 'arroz_id' }).exec((err, arroz) => {
 
         if (err) {
             return res.status(500).json({
-                message: 'Error al obtener proveedor'
+                message: 'Error al obtener arroz'
             });
         } else {
-            if (!product) {
+            if (!arroz) {
                 return res.status(404).json({
-                    message: 'El proveedor no existe'
+                    message: 'El arroz no existe'
                 });
             } else {
                 return res.status(200).json({
-                    product
+                    arroz
                 });
             }
         }
@@ -177,28 +139,28 @@ function getProductUnic(req, res) {
 
 
 /***********************************************************************
-ELIMINAR UN PRODUCTO
+ELIMINAR UN ARROZ
 ************************************************************************/
-function deleteProduct(req, res) {
+function deleteArroz(req, res) {
 
-    var productId = req.params.id;
+    var arrozId = req.params.id;
 
 
-    Product.findByIdAndRemove(productId, (err, productDeleted) => {
+    Arroz.findByIdAndRemove(arrozId, (err, arrozDeleted) => {
         if (err) {
 
             res.status(500).send({
-                message: 'Error al eliminar productos'
+                message: 'Error al eliminar arroz'
             });
         } else {
-            if (!productDeleted) {
+            if (!arrozDeleted) {
                 res.status(404).send({
-                    message: 'No se ha podido borrar el producto'
+                    message: 'No se ha podido borrar el arroz'
                 });
             } else {
 
                 res.status(200).send({
-                    product: productDeleted
+                    arroz: arrozDeleted
                 });
             }
 
@@ -212,7 +174,7 @@ function deleteProduct(req, res) {
 CARGAR IMAGENES
 ************************************************************************/
 function uploadImage(req, res) {
-    var productId = req.params.id;
+    var arrozId = req.params.id;
     var file_name = 'No subido';
 
     if (req.files) {
@@ -226,19 +188,20 @@ function uploadImage(req, res) {
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
 
 
-            Product.findByIdAndUpdate(productId, { image: file_name }, { new: true }, (err, productUpdate) => {
+            Arroz.findByIdAndUpdate(arrozId, { image: file_name }, { new: true }, (err, arrozUpdate) => {
+
                 if (err) {
                     res.status(500).send({
                         message: 'Error al subir imagen'
                     });
                 } else {
-                    if (!productUpdate) {
+                    if (!arrozUpdate) {
                         res.status(404).send({
                             message: 'No se ha podido subir la imagen'
                         });
                     } else {
                         res.status(200).send({
-                            product: productUpdate,
+                            arroz: arrozUpdate,
                             image: file_name
                         });
                     }
@@ -268,7 +231,7 @@ function uploadImage(req, res) {
 
 function getImageFile(req, res) {
     var imageFile = req.params.imageFile;
-    var path_file = './uploads/product/' + imageFile;
+    var path_file = './uploads/arroz/' + imageFile;
 
     fs.exists(path_file, function(exists) {
         if (exists) {
@@ -284,13 +247,12 @@ function getImageFile(req, res) {
 
 
 module.exports = {
-    saveProduct,
-    updateProduct,
-    getProduct,
-    deleteProduct,
+    saveArroz,
+    updateArroz,
+    getArroz,
+    deleteArroz,
     uploadImage,
     getImageFile,
-    getProductUnic,
-    saveArroz
+    getArrozUnic,
 
 };

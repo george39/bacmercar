@@ -21,6 +21,7 @@ function saveProvider(req, res) {
     if (params.nameProvider && params.nameCompany) {
         provider.nameProvider = params.nameProvider;
         provider.nameCompany = params.nameCompany;
+        provider.phone = params.phone;
 
 
         provider.save((err, providerSave) => {
@@ -91,7 +92,7 @@ function getProvider(req, res) {
                 });
             } else {
                 res.status(200).send({
-                    provider
+                    provider: provider
                 });
             }
         }
@@ -99,8 +100,37 @@ function getProvider(req, res) {
 }
 
 
+/************************************************************
+ LISTAR UN PROVEEDOR ESPECIFICO
+*************************************************************/
+function getProviderUnico(req, res) {
+
+    let providerId = req.params.id;
+
+    Provider.findById(providerId).populate({ path: 'provider_id' }).exec((err, provider) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: 'Error al obtener proveedor'
+            });
+        } else {
+            if (!provider) {
+                return res.status(404).json({
+                    message: 'El proveedor no existe'
+                });
+            } else {
+                return res.status(200).json({
+                    provider
+                });
+            }
+        }
+
+    });
+}
+
+
 /***********************************************************************
-ELIMINAR UN PRODUCTO
+ELIMINAR UN PROVEEDOR
 ************************************************************************/
 function deleteProvider(req, res) {
 
@@ -132,5 +162,6 @@ module.exports = {
     saveProvider,
     updateProvider,
     getProvider,
-    deleteProvider
+    deleteProvider,
+    getProviderUnico
 }
