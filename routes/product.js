@@ -18,6 +18,7 @@ var md_uploadAceite = multipart({ uploadDir: './uploads/aceite' });
 
 api.post('/save-product', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.saveProduct);
 api.put('/update-product/:id', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.updateProduct);
+api.put('/update-product-venta/:id', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.updateProductVenta);
 api.get('/get-product', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.getProduct);
 api.get('/get-product-unic/:id', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.getProductUnic);
 api.delete('/delete-product/:id', [mdAuth.ensureAuth, mdAdmin.isAdmin], ProductController.deleteProduct);
@@ -28,6 +29,8 @@ api.get('/get-image-product/:imageFile', ProductController.getImageFile);
 /************************************************************
  ABARROTES
  *************************************************************/
+
+//arroz
 api.post('/save-arroz', [mdAuth.ensureAuth, mdAdmin.isAdmin], ArrozController.saveArroz);
 api.get('/get-arroz', [mdAuth.ensureAuth], ArrozController.getArroz);
 api.get('/get-arroz-unic/:id', [mdAuth.ensureAuth, mdAdmin.isAdmin], ArrozController.getArrozUnic);

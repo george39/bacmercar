@@ -24,6 +24,7 @@ function saveAceite(req, res) {
         aceite.name = params.name;
         aceite.code = params.code;
         aceite.quantity = params.quantity;
+        aceite.quantityClient = 0;
         aceite.priceHigher = params.priceHigher;
         aceite.priceClient = params.priceClient;
         aceite.image = params.image;

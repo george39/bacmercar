@@ -24,6 +24,7 @@ function saveArroz(req, res) {
         arroz.name = params.name;
         arroz.code = params.code;
         arroz.quantity = params.quantity;
+        arroz.quantityClient = 0;
         arroz.priceHigher = params.priceHigher;
         arroz.priceClient = params.priceClient;
         arroz.image = params.image;

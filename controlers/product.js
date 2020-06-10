@@ -23,6 +23,7 @@ function saveProduct(req, res) {
         product.name = params.name;
         product.code = params.code;
         product.quantity = params.quantity;
+        product.quantityClient = 0;
         product.priceHigher = params.priceHigher;
         product.priceClient = params.priceClient;
         product.image = params.image;
@@ -97,7 +98,9 @@ ACTUALIZAR UN PRODUCTO
 function updateProduct(req, res) {
 
     var productId = req.params.id;
+
     var update = req.body;
+
 
     Product.findByIdAndUpdate(productId, update, { new: true }, (err, productUpdate) => {
         if (err) {
@@ -113,6 +116,40 @@ function updateProduct(req, res) {
             } else {
                 res.status(200).send({
                     product: productUpdate
+
+                });
+            }
+        }
+    });
+}
+
+
+
+/***********************************************************************
+ACTUALIZAR UN PRODUCTO
+************************************************************************/
+function updateProductVenta(req, res) {
+
+    var productId = req.params.id;
+
+    var update = { $set: { quantity: req.body.quantity } }; // req.body;
+
+
+    Product.findByIdAndUpdate(productId, update, { new: true }, (err, productUpdate) => {
+        if (err) {
+
+            res.status(500).send({
+                message: 'Error al actualizar productos'
+            });
+        } else {
+            if (!productUpdate) {
+                res.status(404).send({
+                    message: 'El producto con ese id no existe'
+                });
+            } else {
+                res.status(200).send({
+                    product: productUpdate
+
                 });
             }
         }
@@ -291,6 +328,7 @@ module.exports = {
     uploadImage,
     getImageFile,
     getProductUnic,
-    saveArroz
+    saveArroz,
+    updateProductVenta
 
 };

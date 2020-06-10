@@ -9,6 +9,7 @@ var ProductSchema = Schema({
     name: { type: String, required: [true, 'El nombre es necesario'] },
     code: { type: String, required: [true, 'El codigo es necesario'] },
     quantity: { type: Number, required: [true, 'La contidad es necesaria'] },
+    quantityClient: { type: Number, required: [true, 'La contidad es necesaria'] },
     priceHigher: { type: Number, required: [true, 'El precio al por mayor es necesario'] },
     priceClient: { type: Number, required: [true, 'El precio del cliente es necesario'] },
     image: { type: String, required: false }
